@@ -75,6 +75,8 @@
         return this.$el.find('.chardinjs-overlay').length !== 0;
       };
 
+      var modalPosition = false;
+
       chardinJs.prototype._add_overlay_layer = function() {
         var element_position, overlay_layer, styleText,
           _this = this;
@@ -88,6 +90,10 @@
         if (this.$el.prop('tagName') === "BODY") {
           styleText += "top: 0;bottom: 0; left: 0;right: 0;position: fixed;";
           overlay_layer.setAttribute("style", styleText);
+        } else if (this.$el.attr('isModal') === 'modal'){
+          styleText += "top: 0;bottom: 0; left: 0;right: 0;position: fixed;";
+          overlay_layer.setAttribute("style", styleText);
+          modalPosition = this._get_offset(this.$el.get()[0]);
         } else {
           element_position = this._get_offset(this.$el.get()[0]);
           if (element_position) {
@@ -150,6 +156,10 @@
 
         helper_layer = $(element).data('helper_layer');
         element_position = this._get_offset(element);
+        if( modalPosition ){
+          element_position.top = element_position.top - modalPosition.top
+          element_position.left = element_position.left - modalPosition.left
+        }
         return helper_layer.setAttribute("style", "width: " + element_position.width + "px; height:" + element_position.height + "px; top:" + element_position.top + "px; left: " + element_position.left + "px;");
       };
 
